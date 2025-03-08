@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+
     <div class="content">
+        <h2>Danh sách các môn học</h2>
         <form action="/save" method="post">
             <input type="text" name="id" placeholder="Nhập ID">
             <br>
@@ -22,8 +24,6 @@
             <button type="submit">Submit</button>
         </form>
         <table>
-            <caption>Danh sách các môn học</caption>
-
             <thead>
                 <tr>
                     <th>STT</th>
@@ -43,8 +43,11 @@
                     <td><%= item.semester %></td>
                     <td><%= item.department %></td>
                     <td>
-                        <a href="/edit/<%= item.id %>">Edit</a>
-                        <a href="/delete/<%= item.id %>">Delete</a>
+                        <form action="/delete" method="POST">
+                            <input type="hidden" name="id" value="<%= item.id %>">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
                     </tr>
                 <% }); %>
             </tbody>

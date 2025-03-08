@@ -35,6 +35,23 @@ app.post("/save", (req, res) => {
     return res.redirect("/");
 });
 
+app.post("/delete", (req, res) => {
+    const id = Number(req.body.id);
+    
+    // Kiểm tra xem khóa học có tồn tại không
+    const courseToDelete = courses.find(course => course.id === id);
+    if (courseToDelete) {
+        // Nếu tìm thấy khóa học, tiến hành xóa
+        courses = courses.filter(course => course.id !== id);
+    } else {
+        // Nếu không tìm thấy, có thể thông báo lỗi hoặc xử lý khác
+        console.log("Course not found");
+    }
+
+    return res.redirect("/");
+});
+
+
 app.listen(3000, () => {
     console.log(`Server is running on port ${PORT}`);
 });
