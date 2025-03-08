@@ -8,7 +8,30 @@
 </head>
 <body>
     <div class="content">
-        <h1>Hello world</h1>
+        <table>
+            <caption>Danh sách các môn học</caption>
+
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên môn học</th>
+                    <th>Loại môn học</th>
+                    <th>Học kỳ</th>
+                    <th>Khoa</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% courses.forEach(item  => { %>
+                <tr>
+                    <td><%= item.id %></td>
+                    <td><%= item.name %></td>
+                    <td><%= item.course_type %></td>
+                    <td><%= item.semester %></td>
+                    <td><%= item.department %></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

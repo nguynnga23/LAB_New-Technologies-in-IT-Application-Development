@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-
+const PORT = 3000;
+let courses = require("./data");
 // Register middleware
 app.use(express.json({extended: false}));
 app.use(express.static("./views")); // Cho phép dùng các tài nguyên tĩnh như css, js, images,...
@@ -10,9 +11,9 @@ app.set("view engine", "ejs"); // Khai báo rằng app sẽ dùng engine ejs đ�
 app.set("views", "./views"); // Nội dung render trang web sẽ nằm trong thư mục tên "views"
 
 app.get("/", (req, res) => {
-    return res.render("index"); // 
+    return res.render("index", {courses}); // 
 });
 
 app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+    console.log(`Server is running on port ${PORT}`);
 });
