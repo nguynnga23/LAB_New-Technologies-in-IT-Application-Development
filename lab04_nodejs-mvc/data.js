@@ -20,6 +20,20 @@ const courses = [
         semester: "HK1-2020-2021",
         department: "Công nghệ thông tin",
     },
+    {
+        id: 4,
+        name: "Lập trình hướng đối tượng",
+        course_type: "Đại cương",
+        semester: "HK1-2020-2021",
+        department: "Công nghệ thông tin",
+    },
+    {
+        id: 5,
+        name: "Lập trình hướng đối tượng",
+        course_type: "Đại cương",
+        semester: "HK1-2020-2021",
+        department: "Công nghệ thông tin",
+    },
 ];
 
 module.exports = courses; // Export ra ngoài để các file khác có thể sử dụng được
