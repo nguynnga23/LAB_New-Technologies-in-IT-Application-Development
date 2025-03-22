@@ -12,7 +12,7 @@ app.set("view engine", "ejs");
 app.set("views", "./views");
 
 // Routes
-const courseRoutes = require("./routes/course.routes");
-app.use("/courses", courseRoutes);
+const courseRoutes = require("./routes/course.route");
+app.use("/", courseRoutes);
 
 module.exports = app;

@@ -7,10 +7,10 @@ const getCourses = async () => {
     const params = { TableName: TABLE_NAME };
     try {
         const result = await dynamoDB.scan(params).promise();
-        return result.Items;
+        return result.Items; // Trả về danh sách khóa học
     } catch (error) {
         console.error("Error fetching courses:", error);
-        return [];
+        return [];  // Trả về mảng rỗng nếu có lỗi
     }
 };
 
@@ -18,7 +18,7 @@ const getCourses = async () => {
 const addCourse = async (course) => {
     const params = {
         TableName: TABLE_NAME,
-        Item: course
+        Item: course, // Thêm thông tin khóa học vào DynamoDB
     };
     try {
         await dynamoDB.put(params).promise();
@@ -32,7 +32,7 @@ const addCourse = async (course) => {
 const deleteCourse = async (id) => {
     const params = {
         TableName: TABLE_NAME,
-        Key: { id: Number(id)  }
+        Key: { id: id }  // Lưu ý: 'id' phải trùng với tên khóa chính trong DynamoDB
     };
     try {
         await dynamoDB.delete(params).promise();

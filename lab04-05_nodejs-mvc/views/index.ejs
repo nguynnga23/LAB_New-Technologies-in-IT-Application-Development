@@ -10,7 +10,7 @@
 
     <div class="content">
         <h2>Danh sách các môn học</h2>
-        <form action="/courses/save" method="post">
+        <form action="/save" method="post">
             <input type="text" name="id" placeholder="Nhập ID">
             <br>
             <input type="text" name="name" placeholder="Nhập tên môn học">
@@ -20,6 +20,8 @@
             <input type="text" name="semester" placeholder="Nhập học kỳ">
             <br>
             <input type="text" name="department" placeholder="Nhập khoa">
+            <br>
+            <input type="file" id="file-upload" name="image" accept="image/*">
             <br>
             <button type="submit">Submit</button>
         </form>
@@ -32,6 +34,7 @@
                     <th>Loại môn học</th>
                     <th>Học kỳ</th>
                     <th>Khoa</th>
+                    <th>Hình ảnh</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -44,7 +47,12 @@
                     <td><%= item.semester %></td>
                     <td><%= item.department %></td>
                     <td>
-                        <form action="/courses/delete" method="POST">
+                        <img src="<%= item.image %>" alt="Image" style="max-width: 200px; height: auto;">
+                    </td>
+                    
+
+                    <td>
+                        <form action="/delete" method="POST">
                             <input type="hidden" name="id" value="<%= item.id %>">
                             <button type="submit">Delete</button>
                         </form>
