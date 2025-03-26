@@ -78,118 +78,18 @@ lab04-05_nodejs-mvc/
 ### 1. `GET /` (Lấy danh sách khóa học)
 - Mục đích: Hiển thị danh sách khóa học từ DynamoDB trên giao diện index.ejs.
 - Luồng hoạt động:
-```
-[Client]
-   | Gửi GET /
-   v
-[server.js]
-   | Khởi động server, gọi src/app.js
-   v
-[src/app.js]
-   | app.use('/', courseRoutes) -> Chuyển yêu cầu đến route
-   v
-[src/routes/course.route.js]
-   | router.get('/', courseController.getAllCourses)
-   v
-[src/controllers/course.controller.js]
-   | courseController.getAllCourses()
-   | Gọi courseModel.getCourses()
-   v
-[src/models/course.model.js]
-   | courseModel.getCourses()
-   | Sử dụng AWS từ src/configs/aws.helper.js
-   | dynamodb.scan({ TableName: 'Courses' })
-   v
-[DynamoDB]
-   | Trả về danh sách khóa học (Items)
-   v
-[src/controllers/course.controller.js]
-   | Nhận dữ liệu từ model
-   | res.render('index', { courses })
-   v
-[views/index.ejs]
-   | Render HTML với danh sách khóa học
-   | Sử dụng CSS từ public/index.css
-   v
-[Client]
-   | Nhận và hiển thị giao diện
-```
+![Flow GET/](./public/img/flow_get_courses.png)
 
 ### 2. `POST /save` (Thêm khóa học)
 - Mục đích: Nhận dữ liệu từ form (bao gồm file ảnh nếu có), upload ảnh lên S3, lưu thông tin khóa học vào DynamoDB, rồi redirect về trang chính.
 - Luồng hoạt động:
-```
-[Client]
-   | Gửi POST /save (form: title, description, image)
-   v
-[server.js]
-   | Chuyển yêu cầu đến src/app.js
-   v
-[src/app.js]
-   | app.use('/', courseRoutes)
-   | Middleware multer xử lý file upload
-   v
-[src/routes/course.route.js]
-   | router.post('/save', upload.single('image'), courseController.saveCourse)
-   v
-[src/controllers/course.controller.js]
-   | courseController.saveCourse()
-   | if (req.file) {
-   |   Gọi uploadService.uploadFile(req.file)
-   | }
-   | Gọi courseModel.addCourse(course)
-   |         \
-   v          v
-[src/services/upload.service.js]  [src/models/course.model.js]
-   | uploadService.uploadFile()     | courseModel.addCourse()
-   | Sử dụng AWS từ aws.helper.js   | Sử dụng AWS từ aws.helper.js
-   | s3.upload()                   | dynamodb.put()
-   v          v
-[AWS S3]    [DynamoDB]
-   | Trả URL ảnh  | Trả trạng thái lưu
-   v          v
-[src/controllers/course.controller.js]
-   | Nhận URL ảnh (nếu có) và trạng thái từ model
-   | res.redirect('/')
-   v
-[Client]
-   | Nhận redirect, gửi GET / để hiển thị danh sách mới
-```
+![Flow GET/](./public/img/flow_save_course.png)
+
 
 ### 3. POST /delete (Xóa khóa học)
 - Mục đích: Xóa khóa học khỏi DynamoDB dựa trên ID, rồi redirect về trang chính.
 - Luồng hoạt động:
-```
-[Client]
-   | Gửi POST /delete (form: id)
-   v
-[server.js]
-   | Chuyển yêu cầu đến src/app.js
-   v
-[src/app.js]
-   | app.use('/', courseRoutes)
-   v
-[src/routes/course.route.js]
-   | router.post('/delete', courseController.removeCourse)
-   v
-[src/controllers/course.controller.js]
-   | courseController.removeCourse()
-   | Gọi courseModel.deleteCourse(id)
-   v
-[src/models/course.model.js]
-   | courseModel.deleteCourse(id)
-   | Sử dụng AWS từ aws.helper.js
-   | dynamodb.delete({ TableName: 'Courses', Key: { id } })
-   v
-[DynamoDB]
-   | Trả trạng thái xóa
-   v
-[src/controllers/course.controller.js]
-   | res.redirect('/')
-   v
-[Client]
-   | Nhận redirect, gửi GET / để hiển thị danh sách mới
-```
+![Flow GET/](./public/img/flow_delete_course.png)
 
 ### Tóm tắt luồng tổng thể
 1. Khởi động: `server.js` → `app.js` → cấu hình Express và `routes`.
