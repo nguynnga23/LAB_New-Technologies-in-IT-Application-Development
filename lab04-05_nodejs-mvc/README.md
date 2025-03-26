@@ -86,7 +86,7 @@ lab04-05_nodejs-mvc/
 ![Flow GET/](./public/img/flow_save_course.png)
 
 
-### 3. POST /delete (Xóa khóa học)
+### 3. `POST /delete`(Xóa khóa học)
 - Mục đích: Xóa khóa học khỏi DynamoDB dựa trên ID, rồi redirect về trang chính.
 - Luồng hoạt động:
 ![Flow GET/](./public/img/flow_delete_course.png)
