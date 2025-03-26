@@ -74,7 +74,128 @@ lab04-05_nodejs-mvc/
 - File: `server.js`
     - Khởi chạy server trên cổng được cấu hình trong .env hoặc mặc định là 3000.
 
-## 4. Luồng hoạt động:
-- `GET /`: Client gửi yêu cầu → `Route` gọi `getAllCourses` trong `Controller` → `Controller` gọi `getCourses` từ `Model` → `Model` lấy dữ liệu từ `DynamoDB` → `Controller` render view `courses.ejs` với dữ liệu.
-- `POST /save`: Client gửi form → `Route` gọi `saveCourse` (với middleware upload) → `Controller` upload ảnh lên S3 (qua `S3Service`), gọi `addCourse` từ `Model` → `Model` lưu vào `DynamoDB` → `Redirect` về /.
-- `POST /delete`: Client gửi ID → Route gọi `removeCourse` → `Controller` gọi `deleteCourse` từ `Model` → `Model` xóa khỏi `DynamoDB` → `Redirect` về /.
+## 4. Chi tiết Flow cho từng chức năng:
+### 1. `GET /` (Lấy danh sách khóa học)
+- Mục đích: Hiển thị danh sách khóa học từ DynamoDB trên giao diện index.ejs.
+- Luồng hoạt động:
+```
+[Client]
+   | Gửi GET /
+   v
+[server.js]
+   | Khởi động server, gọi src/app.js
+   v
+[src/app.js]
+   | app.use('/', courseRoutes) -> Chuyển yêu cầu đến route
+   v
+[src/routes/course.route.js]
+   | router.get('/', courseController.getAllCourses)
+   v
+[src/controllers/course.controller.js]
+   | courseController.getAllCourses()
+   | Gọi courseModel.getCourses()
+   v
+[src/models/course.model.js]
+   | courseModel.getCourses()
+   | Sử dụng AWS từ src/configs/aws.helper.js
+   | dynamodb.scan({ TableName: 'Courses' })
+   v
+[DynamoDB]
+   | Trả về danh sách khóa học (Items)
+   v
+[src/controllers/course.controller.js]
+   | Nhận dữ liệu từ model
+   | res.render('index', { courses })
+   v
+[views/index.ejs]
+   | Render HTML với danh sách khóa học
+   | Sử dụng CSS từ public/index.css
+   v
+[Client]
+   | Nhận và hiển thị giao diện
+```
+
+### 2. `POST /save` (Thêm khóa học)
+- Mục đích: Nhận dữ liệu từ form (bao gồm file ảnh nếu có), upload ảnh lên S3, lưu thông tin khóa học vào DynamoDB, rồi redirect về trang chính.
+- Luồng hoạt động:
+```
+[Client]
+   | Gửi POST /save (form: title, description, image)
+   v
+[server.js]
+   | Chuyển yêu cầu đến src/app.js
+   v
+[src/app.js]
+   | app.use('/', courseRoutes)
+   | Middleware multer xử lý file upload
+   v
+[src/routes/course.route.js]
+   | router.post('/save', upload.single('image'), courseController.saveCourse)
+   v
+[src/controllers/course.controller.js]
+   | courseController.saveCourse()
+   | if (req.file) {
+   |   Gọi uploadService.uploadFile(req.file)
+   | }
+   | Gọi courseModel.addCourse(course)
+   |         \
+   v          v
+[src/services/upload.service.js]  [src/models/course.model.js]
+   | uploadService.uploadFile()     | courseModel.addCourse()
+   | Sử dụng AWS từ aws.helper.js   | Sử dụng AWS từ aws.helper.js
+   | s3.upload()                   | dynamodb.put()
+   v          v
+[AWS S3]    [DynamoDB]
+   | Trả URL ảnh  | Trả trạng thái lưu
+   v          v
+[src/controllers/course.controller.js]
+   | Nhận URL ảnh (nếu có) và trạng thái từ model
+   | res.redirect('/')
+   v
+[Client]
+   | Nhận redirect, gửi GET / để hiển thị danh sách mới
+```
+
+### 3. POST /delete (Xóa khóa học)
+- Mục đích: Xóa khóa học khỏi DynamoDB dựa trên ID, rồi redirect về trang chính.
+- Luồng hoạt động:
+```
+[Client]
+   | Gửi POST /delete (form: id)
+   v
+[server.js]
+   | Chuyển yêu cầu đến src/app.js
+   v
+[src/app.js]
+   | app.use('/', courseRoutes)
+   v
+[src/routes/course.route.js]
+   | router.post('/delete', courseController.removeCourse)
+   v
+[src/controllers/course.controller.js]
+   | courseController.removeCourse()
+   | Gọi courseModel.deleteCourse(id)
+   v
+[src/models/course.model.js]
+   | courseModel.deleteCourse(id)
+   | Sử dụng AWS từ aws.helper.js
+   | dynamodb.delete({ TableName: 'Courses', Key: { id } })
+   v
+[DynamoDB]
+   | Trả trạng thái xóa
+   v
+[src/controllers/course.controller.js]
+   | res.redirect('/')
+   v
+[Client]
+   | Nhận redirect, gửi GET / để hiển thị danh sách mới
+```
+
+### Tóm tắt luồng tổng thể
+1. Khởi động: `server.js` → `app.js` → cấu hình Express và `routes`.
+2. Nhận yêu cầu: `Client` → `course.route.js`→ `course.controller.js`.
+3. Xử lý dữ liệu:
+- Lấy dữ liệu: `course.model.js` → `DynamoDB`.
+- Upload ảnh: `upload.service.js` → `S3`.
+- Thêm/Xóa: `course.model.js` → `DynamoDB`.
+4. Trả kết quả: `Controller` → `index.ejs` → `Client` (hoặc redirect).
