@@ -73,3 +73,8 @@ lab04-05_nodejs-mvc/
     - Sử dụng route `courseRoutes`.
 - File: `server.js`
     - Khởi chạy server trên cổng được cấu hình trong .env hoặc mặc định là 3000.
+
+## 4. Luồng hoạt động:
+- `GET /`: Client gửi yêu cầu → `Route` gọi `getAllCourses` trong `Controller` → `Controller` gọi `getCourses` từ `Model` → `Model` lấy dữ liệu từ `DynamoDB` → `Controller` render view `courses.ejs` với dữ liệu.
+- `POST /save`: Client gửi form → `Route` gọi `saveCourse` (với middleware upload) → `Controller` upload ảnh lên S3 (qua `S3Service`), gọi `addCourse` từ `Model` → `Model` lưu vào `DynamoDB` → `Redirect` về /.
+- `POST /delete`: Client gửi ID → Route gọi `removeCourse` → `Controller` gọi `deleteCourse` từ `Model` → `Model` xóa khỏi `DynamoDB` → `Redirect` về /.
