@@ -1,4 +1,4 @@
-const dynamoDB = require("../configs/aws.helper");
+const { dynamoDB } = require("../configs/aws.helper");
 
 const TABLE_NAME = "Subject";
 

@@ -7,8 +7,8 @@ const upload = multer({ storage: multer.memoryStorage() });  // Lưu trữ file 
 // Route lấy danh sách khóa học
 router.get("/", getAllCourses);
 // Route thêm khóa học
-router.post("/save", saveCourse);
-// router.post('/save', upload.single('image'), saveCourse);  // 'image' là tên trường file trong form HTML
+// router.post("/save", saveCourse);
+router.post('/save', upload.single('image'), saveCourse);  // 'image' là tên trường file trong form HTML
 // Route xóa khóa học
 router.post("/delete", removeCourse);
 

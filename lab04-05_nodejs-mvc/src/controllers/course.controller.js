@@ -1,5 +1,5 @@
 const { getCourses, addCourse, deleteCourse } = require("../models/course.model");
-const uploadToS3 = require("../services/upload.service");
+const {uploadToS3} = require("../services/upload.service");
 
 // Hiển thị danh sách khóa học
 const getAllCourses = async (req, res) => {
@@ -21,15 +21,15 @@ const saveCourse = async (req, res) => {
         return res.status(400).json({ message: "Invalid id, it must be a number" });
     }
     // Process file upload (if exists)
-    // let imageUrl = null;
-    // if (req.file) {
-    //     try {
-    //         const uploadedImage = await uploadToS3(req.file);  // Upload ảnh lên S3
-    //         imageUrl = uploadedImage.Location;  // Lấy URL ảnh từ S3
-    //     } catch (error) {
-    //         return res.status(500).json({ message: "Error uploading image", error: error.message });
-    //     }
-    // }
+    let imageUrl = null;
+    if (req.file) {
+        try {
+            const uploadedImage = await uploadToS3(req.file);  // Upload ảnh lên S3
+            imageUrl = uploadedImage.Location;  // Lấy URL ảnh từ S3
+        } catch (error) {
+            return res.status(500).json({ message: "Error uploading image", error: error.message });
+        }
+    }
     try {
         const course = {
             id: id,
@@ -37,7 +37,7 @@ const saveCourse = async (req, res) => {
             course_type: req.body.course_type,
             semester: req.body.semester,
             department: req.body.department,
-            // image: imageUrl
+            image: imageUrl
         };
         await addCourse(course);
         return res.redirect("/");
