@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div>
+        <h2>Add a new paper</h2>
+        <form action="\save", method="post">
+            <input placeholder="Input ISBN" name="isbn"/> <br/>
+            <input placeholder="Input Paper Name" name="paper_name"/> <br/>
+            <input placeholder="Input Author" name="author"/> <br/>
+            <input placeholder="Input Page Sum" name="page_sum"/> <br/>
+            <input placeholder="Input Published Year" name="published_year"/> <br/>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+    <div>
+        <h2>List Paper</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Paper Name</th>
+                    <th>Author</th>
+                    <th>Page Sum</th>
+                    <th>Published Year</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% papers.forEach(item  => { %>
+                    <tr>
+                        <td><%= item.ISBN %></td>
+                        <td><%= item.paper_name %></td>
+                        <td><%= item.author %></td>
+                        <td><%= item.page_sum %></td>
+                        <td><%= item.published_year %></td>
+                        <td>
+                            <form action="/delete", method="post">
+                                <input type="hidden" name="isbn" value="<%= item.ISBN %>"/>
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+            <td>
+
+            </td>
+        </table>
+    </div>
+</body>
