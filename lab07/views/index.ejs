@@ -7,18 +7,17 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div>
+    <div class="content">
         <h2>Add a new paper</h2>
         <form action="\save", method="post">
-            <input placeholder="Input ISBN" name="isbn"/> <br/>
-            <input placeholder="Input Paper Name" name="paper_name"/> <br/>
-            <input placeholder="Input Author" name="author"/> <br/>
-            <input placeholder="Input Page Sum" name="page_sum"/> <br/>
-            <input placeholder="Input Published Year" name="published_year"/> <br/>
+            <input placeholder="Input ISBN" name="isbn"/> <br/> <br/>
+            <input placeholder="Input Paper Name" name="paper_name"/> <br/> <br/>
+            <input placeholder="Input Author" name="author"/> <br/> <br/>
+            <input placeholder="Input Page Sum" name="page_sum"/> <br/> <br/>
+            <input placeholder="Input Published Year" name="published_year"/> <br/> <br/>
             <button type="submit">Save</button>
         </form>
-    </div>
-    <div>
+    <div class="table-container">
         <h2>List Paper</h2>
         <table>
             <thead>
@@ -49,8 +48,8 @@
                 <% }); %>
             </tbody>
             <td>
-
             </td>
         </table>
     </div>
+</div>
 </body>
