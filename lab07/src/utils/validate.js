@@ -3,10 +3,19 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 const TABLE_NAME = 'Paper';
 
+// Biểu thức kiểm tra tên hợp lệ (chỉ chứa chữ cái, chữ số và khoảng trắng)
 const nameRegex = /^[a-zA-Z0-9\s]+$/;
+
+// Biểu thức kiểm tra tên tác giả hợp lệ (chỉ chứa chữ cái, chữ số và khoảng trắng)
 const authorRegex = /^[a-zA-Z0-9\s]+$/;
+
+// Biểu thức kiểm tra định dạng ISBN hợp lệ (chỉ chứa chữ số và dấu gạch ngang)
 const isbnRegex = /^[0-9-]+$/;
+
+// Biểu thức kiểm tra số trang hợp lệ (chỉ chứa chữ số)
 const pagesRegex = /^[0-9]+$/;
+
+// Biểu thức kiểm tra năm hợp lệ (chỉ chứa chữ số)
 const yearRegex = /^[0-9]+$/;
 
 const checkEmpty = (payload) => {
