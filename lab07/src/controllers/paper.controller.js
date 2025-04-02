@@ -57,10 +57,9 @@ const savePaper = async (req, res) => {
 
 // Delete paper
 const removePaper = async(req, res)=>{
-    const isbn = req.body.isbn;
     try{
-        const id = isbn;
-        await deletePaper(id);
+        const Id = req.body.Id;
+        await deletePaper(Id);
         return res.redirect("/");
     }catch(error){
         return res.status(500).json({message: "Error"});
