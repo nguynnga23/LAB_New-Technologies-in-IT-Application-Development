@@ -1,5 +1,6 @@
 const {dynamoDB} = require("../configs/aws.helper");
 const TABLE_NAME = "Paper";
+const { v4: uuidv4 } = require("uuid")
 
 const getPapers = async()=>{
     const params = {TableName: TABLE_NAME};
@@ -13,10 +14,20 @@ const getPapers = async()=>{
 };
 
 const addPaper = async(paper)=>{
+    const id = uuidv4(); // Tạo unique ID cho subject
     const params = {
         TableName: TABLE_NAME,
-        Item: paper,
+        Item: {
+            Id: id,
+            ISBN: paper.ISBN,
+            paper_name: paper.paper_name,
+            author: paper.author,
+            page_sum: paper.page_sum,
+            published_year: paper.published_year,
+            image: paper.image
+        },
     }
+    console.log(params.Item)
     try{
         await dynamoDB.put(params).promise();
         console.log("Paper added: ", paper);
@@ -28,7 +39,7 @@ const addPaper = async(paper)=>{
 const deletePaper = async(id) =>{
     const params = {
         TableName: TABLE_NAME,
-        Key: {ISBN: id},
+        Key: {Id: id},
     };
 
     try{

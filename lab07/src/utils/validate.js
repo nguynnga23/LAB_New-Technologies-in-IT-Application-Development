@@ -16,11 +16,19 @@ const checkEmpty = (payload) => {
 const isISBNUnique = async (isbn) => {
     const params = {
         TableName: TABLE_NAME,
-        Key: { ISBN: isbn }
+        FilterExpression: 'ISBN = :isbn',
+        ExpressionAttributeValues: {
+            ':isbn': isbn
+        }
     };
-    
-    const result = await dynamoDB.get(params).promise();
-    return !result.Item;
+
+    try {
+        const result = await dynamoDB.scan(params).promise();
+        return result.Items.length === 0; // Nếu không có mục nào, ISBN là duy nhất
+    } catch (error) {
+        console.error('Lỗi khi kiểm tra ISBN:', error);
+        throw new Error('Không thể kiểm tra tính duy nhất của ISBN');
+    }
 };
 
 const validatePaper = async (payload) => {

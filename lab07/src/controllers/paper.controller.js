@@ -13,9 +13,7 @@ const getListPapers = async(req, res)=>{
 
 // Add paper
 const savePaper = async (req, res) => {
-    const isbn = req.body.isbn;
     let imageUrl = null;
-
     console.log("req.file:", req.file);
 
     if(req.file){
@@ -28,14 +26,14 @@ const savePaper = async (req, res) => {
     }
     try {
         const paper = {
-            ISBN: isbn,
+            ISBN: req.body.isbn,
             paper_name: req.body.paper_name,
             author: req.body.author,
             page_sum: req.body.page_sum,  // Fix: this was incorrectly set to `req.body.author`
             published_year: req.body.published_year,
             image: imageUrl
         };
-
+        console.log(paper)
         // Validate paper input
         const errors = await validatePaper(paper);
         if (errors) {
