@@ -1,8 +1,9 @@
 const {s3} = require("../configs/aws.helper");
+
 const uploadToS3 = (file) => {
     const params = {
         Bucket: process.env.BUCKET_NAME,
-        Key: `${Date.now()}_${file.originalName}`,
+        Key: `${Date.now()}_${file.originalname}`,
         Body: file.buffer,
         ContentType: file.mimetype
     };
@@ -10,4 +11,4 @@ const uploadToS3 = (file) => {
     return s3.upload(params).promise();
 }
 
-module.exports = uploadToS3;
+module.exports = { uploadToS3 };

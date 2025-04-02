@@ -24,13 +24,13 @@ const isISBNUnique = async (isbn) => {
 };
 
 const validatePaper = async (payload) => {
-    const { ISBN, paper_name, author, page_sum, published_year } = payload;
+    const { ISBN, paper_name, author, page_sum, published_year, image } = payload;
     const errors = [];
     const currentYear = new Date().getFullYear();
 
-    if (checkEmpty(payload)) {
-        errors.push('All fields are required. Please make sure all fields are filled out.');
-    }
+    // if (checkEmpty(payload)) {
+    //     errors.push('All fields are required. Please make sure all fields are filled out.');
+    // }
 
     if (!isbnRegex.test(ISBN)) {
         errors.push('Invalid ISBN format. Please ensure the ISBN contains only numbers and hyphens (e.g., "978-3-16-148410-0").');

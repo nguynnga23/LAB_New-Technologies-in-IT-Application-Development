@@ -9,12 +9,13 @@
 <body>
     <div class="content">
         <h2>Add a new paper</h2>
-        <form action="\save", method="post">
-            <input placeholder="Input ISBN" name="isbn" required/> <br/> <br/>
-            <input placeholder="Input Paper Name" name="paper_name" required/> <br/> <br/>
-            <input placeholder="Input Author" name="author" require/> <br/> <br/>
-            <input placeholder="Input Page Sum" name="page_sum" required/> <br/> <br/>
-            <input placeholder="Input Published Year" name="published_year" required/> <br/> <br/>
+        <form action="\save", method="post", enctype="multipart/form-data">
+            <input placeholder="Input ISBN" name="isbn" required/> <br/><br/>
+            <input placeholder="Input Paper Name" name="paper_name" required/> <br/><br/>
+            <input placeholder="Input Author" name="author" require/> <br/><br/>
+            <input placeholder="Input Page Sum" name="page_sum" required/> <br/><br/>
+            <input placeholder="Input Published Year" name="published_year" required/> <br/><br/>
+            <input type="file" id="file-upload" name="image" accept="image/*"> <br/><br/>
             <button type="submit">Save</button>
         </form>
     <div class="table-container">
@@ -27,6 +28,7 @@
                     <th>Author</th>
                     <th>Page Sum</th>
                     <th>Published Year</th>
+                    <th>Image</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -38,6 +40,9 @@
                         <td><%= item.author %></td>
                         <td><%= item.page_sum %></td>
                         <td><%= item.published_year %></td>
+                        <td>
+                            <img src="<%= item.image%>" alt="Image" style="max-width: 200px; height: auto;"/>
+                        </td>
                         <td>
                             <form action="/delete", method="post">
                                 <input type="hidden" name="isbn" value="<%= item.ISBN %>"/>

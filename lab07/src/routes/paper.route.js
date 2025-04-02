@@ -9,10 +9,10 @@ const upload = multer({storage: multer.memoryStorage()});
 route.get("/", getListPapers);
 
 // Add paper
-route.post("/save", savePaper)
-// route.post("/save", upload.single('image', addPaper))
+// route.post("/save", savePaper)
+route.post("/save", upload.single('image'), savePaper)
 
-// Delete paper
+// Delete papers
 route.post('/delete', removePaper);
 
 module.exports = route;

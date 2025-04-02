@@ -1,6 +1,6 @@
 const {getPapers, addPaper, deletePaper} = require("../models/paper.model");
 const { validatePaper } = require("../utils/validate");
-
+const { uploadToS3 } = require("../services/upload.service")
 // Get list paper
 const getListPapers = async(req, res)=>{
     try{
@@ -14,13 +14,26 @@ const getListPapers = async(req, res)=>{
 // Add paper
 const savePaper = async (req, res) => {
     const isbn = req.body.isbn;
+    let imageUrl = null;
+
+    console.log("req.file:", req.file);
+
+    if(req.file){
+        try{
+            const uploadedImage = await uploadToS3(req.file);
+            imageUrl = uploadedImage.Location;
+        } catch(error){
+            return res.status(500).json({message: "Error uploading image", error: error.message})
+        }
+    }
     try {
         const paper = {
             ISBN: isbn,
             paper_name: req.body.paper_name,
             author: req.body.author,
             page_sum: req.body.page_sum,  // Fix: this was incorrectly set to `req.body.author`
-            published_year: req.body.published_year
+            published_year: req.body.published_year,
+            image: imageUrl
         };
 
         // Validate paper input
