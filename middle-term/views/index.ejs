@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <form action="/save", method="post", enctype="multipart/form-data">
+            <input placeholder="Input Car Name", name="CarName" required/> <br/><br/>
+            <input placeholder="Input Car Type", name="CarType" required/> <br/><br/>
+            <input type="file" id="file-update" placeholder="Input Image URL", name="image" accept="image/*" required/> <br/><br/>
+            <input placeholder="Input Price", name="Price" required/> <br/><br/>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div>
+        <h2>List car</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Car ID</th>
+                    <th>Car Name</th>
+                    <th>Car Type</th>
+                    <th>Image</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% cars.forEach(item => {%>
+                    <tr>
+                        <td><%=item.CarID%></td>
+                        <td><%=item.CarName%></td>
+                        <td><%=item.CarType%></td>
+                        <td>
+                            <img src=" <%=item.ImageURL%>" alt="Image" style="max-height: 200px; height:auto;"/>
+                        </td>
+                        <td><%=item.Price%></td>
+                        <td>
+                            <form action="/delete", method="post">
+                                <input type="hidden", name="CarID" value="<%=item.CarID%>"/>
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <%}); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
